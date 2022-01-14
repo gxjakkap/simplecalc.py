@@ -35,7 +35,7 @@ def sum():
         return
     result = str(eval(expression))
     disp.set(result)
-    expression = ""
+    expression = result
 
 disp = tk.StringVar()
 expression = ""
