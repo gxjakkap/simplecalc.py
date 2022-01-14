@@ -5,6 +5,7 @@ app.title("Calc")
 bgcolor = "#C2EABD"
 numcolor = "#627264"
 opcolor = "#A96DA3"
+required_symbols = ['+', '-', '*', '/']
 
 
 def clear():
@@ -21,6 +22,10 @@ def press(item):
 
 def sum():
     global expression
+    global required_symbols
+    x = any(expression in required_symbols for expression in expression)
+    if not x:
+        return
     result = str(eval(expression))
     disp.set(result)
     expression = ""
