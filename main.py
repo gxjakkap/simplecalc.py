@@ -1,7 +1,7 @@
 import tkinter as tk
 app = tk.Tk()
 app.option_add('*font', 'Ariel 24')
-app.title("Calc")
+app.title("Simplecalc.py")
 bgcolor = "#C2EABD"
 numcolor = "#627264"
 opcolor = "#A96DA3"
@@ -13,18 +13,26 @@ def clear():
     global expression
     global disp
     result = 0
-    expression = ""
+    expression = "0"
     disp.set(result)
 
 def rem():
     global expression
     global disp
-    expression = expression[:-1]
-    disp.set(expression)
+    if len(expression)==1 and expression=="0":
+        return
+    elif len(expression)==1:
+        expression = "0"
+        disp.set(expression)
+    else:
+        expression = expression[:-1]
+        disp.set(expression)
 
 def press(item):
     global expression
     expression = expression + str(item)
+    if expression[0] == "0" and len(expression)==2 and item not in required_symbols:
+        expression = expression[-1:]
     disp.set(expression)
 
 def sum():
@@ -33,19 +41,24 @@ def sum():
     x = any(expression in required_symbols for expression in expression)
     if not x:
         return
-    result = str(eval(expression))
-    disp.set(result)
-    expression = result
+    try:
+        result = str(eval(expression))
+        disp.set(result)
+        expression = result
+    except Exception as error: 
+        disp.set(error)
+        expression = "0"
+
+    
 
 disp = tk.StringVar()
-expression = ""
+expression = "0"
 disp.set(expression)
-disp.set(0)
 
 label = tk.Label(app,textvariable=disp, bg=bgcolor, width=22, height=2)
 label.grid(row=0, column=0, columnspan=5)
 clearb = tk.Button(app, text='Clear', command=clear, bg=funccolor, width=16).grid(row=1, column=0, columnspan=3)
-exitb = tk.Button(app, text="Delete", bg=funccolor, command=rem, width=5).grid(row=1, column=3)
+exitb = tk.Button(app, text="←", bg=funccolor, command=rem, width=5).grid(row=1, column=3)
 #exitb = tk.Button(app, text="OFF", bg=opcolor, command=app.destroy, width=5).grid(row=1, column=3)
 
 sevenb = tk.Button(app,text='7',command=lambda :press('7'), bg=numcolor, width=5).grid(row=2,column=0)
